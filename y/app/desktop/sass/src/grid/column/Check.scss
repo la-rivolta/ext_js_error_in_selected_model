@@ -1,0 +1,11 @@
+.#{$prefix}grid-hd-checker-some .#{$prefix}checkbox-el::before{
+  content: '\e909';
+}
+
+.#{$prefix}grid-hd-checker-on .#{$prefix}checkbox-el::before{
+  content: 'check_box';
+}
+
+.#{$prefix}grid-hd-checker-no .#{$prefix}checkbox-el::before{
+  content: 'check_box_outline_blank';
+}

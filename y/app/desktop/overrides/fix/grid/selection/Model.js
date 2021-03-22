@@ -5,7 +5,19 @@
 Ext.define('y.desktop.overrides.fix.grid.selection.Model', {
   override: 'Ext.grid.selection.Model',
 
+  onHeaderTap(headerCt, header, e) {
+    //TODO доделать с чекбоксами и посмотреть насчет selModel
+    if(header.el.hasCls('x-grid-hd-checker-on')){
+
+    }
+    console.log(header.el.hasCls('x-grid-hd-checker-on'));
+    console.log(this.config.view.dataRange.length);
+    console.log(this.config.view);
+    debugger
+  },
+
   getSelMode(grid, items) {
+    console.log(grid, items);
     if (items.length === 0) {
       return 'MULTIPLE';
     }
@@ -31,6 +43,8 @@ Ext.define('y.desktop.overrides.fix.grid.selection.Model', {
 
     return [];
   },
+
+
 
   /**
    *
