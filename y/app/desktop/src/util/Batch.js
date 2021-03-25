@@ -2,7 +2,18 @@ Ext.define('y.util.Batch', {
 
   singleton: true,
 
-  BATCH_LIMIT: 3,
+  BATCH_LIMIT: 2,
+
+
+  getThisModel(grid){
+    const allGrid = grid.store.getRange();
+    let checkedItems = [];
+    allGrid.map(item => {if (typeof item.previousValues === 'object'){
+      if(item.previousValues.indoor === undefined || item.previousValues.indoor === false){
+        checkedItems.push(item);
+      }}});
+    return checkedItems;
+  },
 
   // old contract, DO NOT USE IT IN NEW PAGES
   buildBatchData(grid, filters) {
@@ -17,11 +28,8 @@ Ext.define('y.util.Batch', {
     }
 
     const allGrid = grid.store.getRange();
-    let checkedItems = [];
-    allGrid.map(item => {if (typeof item.previousValues === 'object'){
-      if(item.previousValues.indoor === undefined || item.previousValues.indoor === false){
-        checkedItems.push(item);
-      }}});
+    let checkedItems = this.getThisModel(grid);
+    //здесь добираюсь до отмеченных элементов, через grid.getSelectable().getSelectedRecords() не получается
 
     const p = {};
     p.selectionMode = grid.getSelectable().getSelMode(allGrid, checkedItems);
@@ -48,15 +56,21 @@ Ext.define('y.util.Batch', {
       };
     }
 
-    const selectionMode = grid.getSelectionModel().getSelMode();
+    const allGrid = grid.store.getRange();
+    let checkedItems = this.getThisModel(grid);
+    //здесь добираюсь до отмеченных элементов, через grid.getSelectable().getSelectedRecords() не получается
+
+    const selectionMode = grid.getSelectable().getSelMode(allGrid, checkedItems);
 
     if (selectionMode !== 'ALL') {
       filters.push({
-        property: grid.getStore().model.prototype.idProperty,
-        value: grid.getSelectionModel().getSelectionIdsForAll(),
+        property: grid.getStore().getModel().prototype.idProperty,
+        value: grid.getSelectable().getSelectionIdsForAll(allGrid, checkedItems),
         operator: selectionMode === 'MULTIPLE' ? 'in' : 'notin'
       });
     }
+
+    console.log(filters);
 
     if (filters.length === 0) {
       return {};
@@ -97,6 +111,15 @@ Ext.define('y.util.Batch', {
     );
   },
 
+  getBatchInfo(grid) {
+    const allGrid = grid.store.getRange();
+    let checkedItems = this.getThisModel(grid);
+
+    return {
+      selectionMode: grid.getSelectable().getSelMode(allGrid, checkedItems),
+      ids: grid.getSelectable().getSelectionIdsForAll(allGrid, checkedItems)
+    };
+  },
   // showProgresssWindow(config) {
   //   let destroyCallback = Ext.emptyFn;
   //   if (config.reloadOnComplete || config.clearSelection || config.callback) {

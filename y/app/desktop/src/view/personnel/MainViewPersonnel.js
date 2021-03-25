@@ -4,17 +4,55 @@ Ext.define('y.view.personnel.MainViewPersonnel',{
   controller: 'mainviewpersonnelcontroller',
 
   requires: [
-    'Ext.layout.Fit'
+    'Ext.field.Text',
+    'Ext.layout.Fit',
+    'Ext.layout.HBox'
   ],
+
+  viewModel: {
+    data:{
+      searchValue: null
+    }
+  },
   layout: 'fit',
   items: [
+    {
+      xtype: 'container',
+      reference: 'headerview',
+      docked: 'top',
+      layout: {
+        type: 'hbox',
+        align: 'stretch'
+      },
+      margin: '10 10 10 10',
+      items:[
+        { xtype: 'textfield',
+          fieldValue: 'Type text in this field',
+          width: 350
+          // handler: 'onCheckBuildBatchData'
+        },
+        { xtype: 'button',
+          text: 'Click',
+          handler: 'doSearch'
+        },
+      ]
+    },
     { xtype: 'personnelview',
     },
-    { xtype: 'button',
+    {
+      xtype: 'container',
       reference: 'footerview',
       docked: 'bottom',
-      text: 'Проверить',
-      handler: 'onCheck'
-    },
+      items:[
+        { xtype: 'button',
+          text: 'Send request with buildBatchData',
+          handler: 'onCheckBuildBatchData'
+        },
+        { xtype: 'button',
+          text: 'Send request with getBatchData',
+          handler: 'onCheckGetBatchData'
+        },
+      ]
+    }
   ]
 });
